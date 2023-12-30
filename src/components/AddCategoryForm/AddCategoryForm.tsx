@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from '../../app/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { addCategory } from '../../store/categories/categoriesThunks.ts';
+import ButtonSpinner from "../Spinner/ButtonSpinner.tsx";
+import { selectFetchTransactionsLoading } from '../../store/transactions/transactionsSlice';
 
 const AddCategoryForm: React.FC = () => {
     const dispatch = useAppDispatch();
+    const fetchLoading = useAppSelector(selectFetchTransactionsLoading);
+
     const [categoryName, setCategoryName] = useState('');
     const [categoryType, setCategoryType] = useState('expense');
 
@@ -57,8 +61,8 @@ const AddCategoryForm: React.FC = () => {
                         <option value="expense">Expense</option>
                     </select>
                 </div>
-                <button type="submit" className="btn btn-primary">
-                    Add Category
+                <button type="submit" className="btn btn-primary" disabled={fetchLoading}>
+                    {fetchLoading ? <ButtonSpinner /> : 'Add Category'}
                 </button>
             </form>
         </div>

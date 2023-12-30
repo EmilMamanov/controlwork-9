@@ -34,17 +34,23 @@ const Categories: React.FC = () => {
         <div>
             <h2>Categories</h2>
 
-            <button onClick={handleAddCategory}>Add Category</button>
+            <button className="btn btn-success" onClick={handleAddCategory}>
+                Add Category
+            </button>
 
             {showAddForm && <AddCategoryForm onClose={() => setShowAddForm(false)} />}
 
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="mx-auto mt-5" style={{ display: 'flex', flexDirection: 'column' }}>
                 {Object.entries(categories).map(([categoryId, category]) => (
-                    <div key={categoryId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div key={categoryId} className="d-flex justify-content-between align-items-center mb-3">
                         <div>{category.name} - {category.type}</div>
                         <div>
-                            <button onClick={() => handleEditCategory(categoryId)}>Edit</button>
-                            <button onClick={() => handleDeleteCategory(categoryId)}>Delete</button>
+                            <button className="btn btn-info me-2" onClick={() => handleEditCategory(categoryId)}>
+                                Edit
+                            </button>
+                            <button className="btn btn-danger" onClick={() => handleDeleteCategory(categoryId)}>
+                                Delete
+                            </button>
                         </div>
                     </div>
                 ))}

@@ -4,15 +4,20 @@ import { fetchCategories } from '../../store/categories/categoriesThunks.ts';
 import { selectCategories } from '../../store/categories/categoriesSlice.ts';
 import { addTransaction } from '../../store/transactions/transactionsThunks';
 import { AddTransactionForm } from '../../types';
+import ButtonSpinner from '../Spinner/ButtonSpinner.tsx';
+import { useNavigate } from 'react-router-dom';
 
 const AddTransaction: React.FC = () => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const categories = useAppSelector(selectCategories);
     const [formData, setFormData] = useState<AddTransactionForm>({
         category: '',
         amount: 0,
         type: 'expense',
     });
+
+    const fetchLoading = useAppSelector((state) => state.categories.fetchLoading);
 
     useEffect(() => {
         dispatch(fetchCategories());
@@ -32,6 +37,7 @@ const AddTransaction: React.FC = () => {
             amount: 0,
             type: 'expense',
         });
+        navigate('/');
     };
 
     const filteredCategories = Object.entries(categories)
@@ -108,8 +114,8 @@ const AddTransaction: React.FC = () => {
                         </label>
                     </div>
                 </div>
-                <button type="submit" className="btn btn-primary">
-                    Add Transaction
+                <button type="submit" className="btn btn-primary" disabled={fetchLoading}>
+                    {fetchLoading ? <ButtonSpinner /> : 'Add Transaction'}
                 </button>
             </form>
         </div>
