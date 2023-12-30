@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { selectCategories } from '../../store/categories/categoriesSlice';
 import AddCategoryForm from '../AddCategoryForm/AddCategoryForm.tsx';
 import EditCategoryForm from '../EditCategoryForm/EditCategoryForm.tsx';
-import { deleteCategory } from '../../store/categories/categoriesThunks';
+import { deleteCategory, fetchCategories } from '../../store/categories/categoriesThunks';
 
 const Categories: React.FC = () => {
     const categories = useAppSelector(selectCategories);
     const dispatch = useAppDispatch();
     const [showAddForm, setShowAddForm] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+    useEffect(() => {
+        dispatch(fetchCategories());
+    }, [dispatch]);
 
     const handleAddCategory = () => {
         setShowAddForm(true);
@@ -34,27 +38,17 @@ const Categories: React.FC = () => {
 
             {showAddForm && <AddCategoryForm onClose={() => setShowAddForm(false)} />}
 
-            <table>
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {Object.entries(categories).map(([categoryId, category]) => (
-                    <tr key={categoryId}>
-                        <td>{category.name}</td>
-                        <td>{category.type}</td>
-                        <td>
+                    <div key={categoryId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        <div>{category.name} - {category.type}</div>
+                        <div>
                             <button onClick={() => handleEditCategory(categoryId)}>Edit</button>
                             <button onClick={() => handleDeleteCategory(categoryId)}>Delete</button>
-                        </td>
-                    </tr>
+                        </div>
+                    </div>
                 ))}
-                </tbody>
-            </table>
+            </div>
 
             {selectedCategory && <EditCategoryForm categoryId={selectedCategory} onClose={() => setSelectedCategory(null)} />}
         </div>

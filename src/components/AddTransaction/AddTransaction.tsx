@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { fetchCategories } from '../../store/categories/categoriesThunks.ts';
-import {selectCategories} from '../../store/categories/categoriesSlice.ts';
+import { selectCategories } from '../../store/categories/categoriesSlice.ts';
 import { addTransaction } from '../../store/transactions/transactionsThunks';
 import { AddTransactionForm } from '../../types';
 
@@ -14,7 +14,7 @@ const AddTransaction: React.FC = () => {
         type: 'expense',
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         dispatch(fetchCategories());
     }, [dispatch]);
 
@@ -34,6 +34,13 @@ const AddTransaction: React.FC = () => {
         });
     };
 
+    const filteredCategories = Object.entries(categories)
+        .filter(([categoryId, category]) => category.type === formData.type)
+        .reduce((acc, [categoryId, category]) => {
+            acc[categoryId] = category;
+            return acc;
+        }, {} as typeof categories);
+
     return (
         <div>
             <h2>Add Transaction</h2>
@@ -50,7 +57,7 @@ const AddTransaction: React.FC = () => {
                         onChange={handleInputChange}
                     >
                         <option value="">Select a category</option>
-                        {Object.entries(categories).map(([categoryId, category]) => (
+                        {Object.entries(filteredCategories).map(([categoryId, category]) => (
                             <option key={categoryId} value={categoryId}>
                                 {category && category.name}
                             </option>
