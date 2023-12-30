@@ -8,6 +8,7 @@ import TransactionList from './components/TransactionList/TransactionList';
 
 const App: React.FC = () => {
     return (
+
         <Layout>
             <Routes>
                 <Route path="/" element={<Home />} />

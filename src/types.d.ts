@@ -15,3 +15,8 @@ export interface AddTransactionForm {
     amount: number;
     type: 'income' | 'expense';
 }
+
+export interface AddCategoryForm {
+    type: 'income' | 'expense';
+    name: string;
+}
